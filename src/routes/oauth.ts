@@ -9,6 +9,16 @@ import {
 
 export const oauthRoutes = new Hono<{ Bindings: Env }>();
 
+// ==== OIDC Discovery 端点 (放在 app 根路由上，见 index.ts 全局注册) ====
+
+// 辅助: 从请求推导 issuer URL
+function getIssuer(c: any): string {
+  const url = new URL(c.req.raw.url);
+  return `${url.protocol}//${url.hostname}${url.port ? ':' + url.port : ''}`;
+}
+
+// ==== 现有端点 ====
+
 // GET /oauth/authorize - 授权端点
 oauthRoutes.get('/authorize', async (c) => {
   const params = c.req.query();

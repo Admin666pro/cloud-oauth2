@@ -6,8 +6,36 @@ import { adminRoutes } from './routes/admin';
 import { ensureAdminUser, getSetting } from './db';
 import type { Env } from './types';
 import { html_login, html_register, html_dashboard, html_admin, html_home } from './views';
+import { getOAuthClient } from './db';
 
 const app = new Hono<{ Bindings: Env }>();
+
+// ==== OIDC Discovery ====
+app.get('/.well-known/openid-configuration', async (c) => {
+  const url = new URL(c.req.raw.url);
+  const origin = `${url.protocol}//${url.hostname}${url.port ? ':' + url.port : ''}`;
+
+  return c.json({
+    issuer: origin,
+    authorization_endpoint: `${origin}/oauth/authorize`,
+    token_endpoint: `${origin}/oauth/token`,
+    userinfo_endpoint: `${origin}/oauth/userinfo`,
+    jwks_uri: `${origin}/.well-known/jwks.json`,
+    response_types_supported: ['code'],
+    grant_types_supported: ['authorization_code'],
+    scopes_supported: ['openid', 'email', 'profile'],
+    token_endpoint_auth_methods_supported: ['client_secret_basic', 'client_secret_post'],
+    subject_types_supported: ['public'],
+    id_token_signing_alg_values_supported: [],
+    code_challenge_methods_supported: ['plain'],
+  });
+});
+
+// JWKS - 因为我们的 token 是不透明随机串(不是 JWT), 返回空
+// 但很多 OIDC 客户端会请求这个端点, 返回空 JSON 避免 404
+app.get('/.well-known/jwks.json', async (c) => {
+  return c.json({ keys: [] });
+});
 
 // CORS
 app.use('*', async (c, next) => {
