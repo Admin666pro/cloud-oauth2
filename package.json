@@ -1,0 +1,23 @@
+{
+  "name": "oauth2-tool",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "d1:generate": "wrangler d1 execute oauth2-db --file=./schema.sql",
+    "d1:generate:remote": "wrangler d1 execute oauth2-db --remote --file=./schema.sql"
+  },
+  "dependencies": {
+    "@hono/zod-validator": "^0.4.1",
+    "hono": "^4.6.9",
+    "totp-generator": "^2.0.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250904.0",
+    "typescript": "^5.6.3",
+    "wrangler": "^3.78.10"
+  }
+}

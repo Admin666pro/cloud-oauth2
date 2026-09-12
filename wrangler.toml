@@ -1,0 +1,26 @@
+name = "oauth2-tool"
+main = "src/index.ts"
+compatibility_date = "2025-09-01"
+
+[vars]
+# 管理员邮箱 - 拥有全部权限
+ADMIN_EMAIL = "admin@example.com"
+# 管理员初始密码 (首次启动后请在后台修改)
+ADMIN_PASSWORD = "admin123"
+# JWT 签名密钥 (请用 wrangler secret put JWT_SECRET 设置)
+# JWT_SECRET = "your-secret-key-here"
+# Turnstile Site Key (如果启用了注册人机验证)
+# TURNSTILE_SITE_KEY = "0x4AAAAAAA..."
+# Turnstile Secret Key (请用 wrangler secret put TURNSTILE_SECRET 设置)
+# TURNSTILE_SECRET = "0x4AAAAAAA..."
+
+# D1 数据库
+[[d1_databases]]
+binding = "DB"
+database_name = "oauth2-db"
+database_id = "your-database-id"
+
+# KV 存储 (用于存储 OAuth code 和 session)
+[[kv_namespaces]]
+binding = "KV"
+id = "your-kv-namespace-id"
